@@ -1,13 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');          // Import CORS
+const dotenv = require('dotenv');       // Import dotenv
+dotenv.config();                        // Load environment variables
+
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON
 app.use(express.json());
 
-// Connect to MongoDB (make sure MongoDB is running locally or use a MongoDB Atlas URL)
-mongoose.connect('mongodb://localhost:27017/senraData', {
+// Enable CORS for all routes
+app.use(cors());
+
+// Connect to MongoDB using environment variables
+mongoose.connect(process.env.MONGO_URL, {   // Make sure the environment variable is called MONGO_URL
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
@@ -15,6 +22,7 @@ mongoose.connect('mongodb://localhost:27017/senraData', {
 }).catch((err) => {
     console.error('Error connecting to MongoDB:', err);
 });
+
 
 // Define a schema for the dynamic data (SenRa messages)
 const messageSchema = new mongoose.Schema({
