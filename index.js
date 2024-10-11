@@ -25,16 +25,29 @@ mongoose.connect(process.env.mongoUrl, {   // Make sure the environment variable
 
 // Define a schema for the dynamic data (SenRa messages)
 const messageSchema = new mongoose.Schema({
-    PDU: String,
-    FREQ: Number,
-    GW: String,
-    EUI: String,
-    TXTime: Date,
-    RSSI: Number,
-    SeqNo: Number,
-    Port: Number,
-    SNR: Number,
-    DataRate: Number
+    ack: Boolean,
+    appEui: String,
+    channel: Number,
+    datarate: Number,
+    devClass: String,
+    devEui: String,
+    devProfile: String,
+    devType: String,
+    dup: Boolean,
+    estLat: Number,
+    estLng: Number,
+    freq: Number,
+    gwEui: String,
+    gwRxTime: Date,
+    ismBand: String,
+    joinId: Number,
+    maxPayload: Number,
+    pdu: String,
+    port: Number,
+    rssi: Number,
+    seqno: Number,
+    snr: Number,
+    txtime: Date
 });
 
 // Create a model for the schema
@@ -47,15 +60,20 @@ const Message = mongoose.model('Message', messageSchema);
 // 1. CREATE: Add a new SenRa message
 app.post('/senra-message', async (req, res) => {
     try {
-        console.log("req.body----------> ", req.body)
+        console.log('Received data from SenRa:', req.body);  // Log the incoming data
+
+        // Create a new message using the incoming data
         const newMessage = new Message(req.body);
-        
+
+        // Save the message to the database
         await newMessage.save();
+
         res.status(201).send({ success: true, message: 'Message created successfully!', data: newMessage });
     } catch (err) {
-        res.status(400).send({ success: false, message: 'Error creating message', error: err });
+        res.status(400).send({ success: false, message: 'Error saving message', error: err });
     }
 });
+
 
 // 2. READ: Get all SenRa messages
 app.get('/senra-messages', async (req, res) => {
