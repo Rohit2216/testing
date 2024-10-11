@@ -1,12 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');          // Import CORS
-const dotenv = require('dotenv');       // Import dotenv
-dotenv.config();                        // Load environment variables
+require('dotenv').config();  // Load environment variables from .env file
 
 const app = express();
 const port = process.env.PORT || 3000;
-
+console.log(process.env.mongoUrl)
 // Middleware to parse JSON
 app.use(express.json());
 
@@ -14,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 // Connect to MongoDB using environment variables
-mongoose.connect(process.env.MONGO_URL, {   // Make sure the environment variable is called MONGO_URL
+mongoose.connect(process.env.mongoUrl, {   // Make sure the environment variable is called MONGO_URL
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
