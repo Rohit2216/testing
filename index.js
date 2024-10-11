@@ -47,7 +47,9 @@ const Message = mongoose.model('Message', messageSchema);
 // 1. CREATE: Add a new SenRa message
 app.post('/senra-message', async (req, res) => {
     try {
+        console.log("req.body----------> ", req.body)
         const newMessage = new Message(req.body);
+        
         await newMessage.save();
         res.status(201).send({ success: true, message: 'Message created successfully!', data: newMessage });
     } catch (err) {
